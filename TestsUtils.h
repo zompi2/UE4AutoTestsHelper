@@ -37,7 +37,6 @@ public:
 				UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetMouseLocation(TargetX, TargetY);
 				GetWorld()->GetTimerManager().ClearTimer(TH);
 				Callback();
-				delete this;
 			}
 			else
 			{
@@ -221,9 +220,10 @@ public:
 		RunOnGameThreadLatentAndWait([TargetX, TargetY, Time](const FDoneDelegate Done)
 		{
 			FTestTicker* MouseTicker = new FTestTicker;
-			MouseTicker->MoveMouse(TargetX, TargetY, Time, [Done]()
+			MouseTicker->MoveMouse(TargetX, TargetY, Time, [Done, MouseTicker]()
 			{
 				Done.Execute();
+				delete MouseTicker;
 			});
 		});
 	}
