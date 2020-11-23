@@ -129,6 +129,22 @@ public:
 		}
 	}
 
+	static void RunOnGameThreadLatentAndWait(TUniqueFunction<void(const FDoneDelegate TestDone)> Function)
+	{
+		bool bWaitForExecute = true;
+		AsyncTask(ENamedThreads::GameThread, [&bWaitForExecute, &Function]()
+		{
+			Function(FDoneDelegate::CreateLambda([&bWaitForExecute]()
+			{
+				bWaitForExecute = false;
+			}));
+		});
+		while (bWaitForExecute)
+		{
+			FPlatformProcess::Sleep(.1f);
+		}
+	}
+
 	template<typename T>
 	static TSubclassOf<T> GetObjectClass(const TCHAR* ObjectPath)
 	{
@@ -198,20 +214,14 @@ public:
 
 	static void MoveMouse(float TargetX, float TargetY, float Time)
 	{
-		bool bWaitForExecute = true;
-		AsyncTask(ENamedThreads::GameThread, [&bWaitForExecute, TargetX, TargetY, Time]()
+		RunOnGameThreadLatentAndWait([TargetX, TargetY, Time](const FDoneDelegate Done)
 		{
 			FTestTicker* MouseTicker = new FTestTicker;
-			MouseTicker->MoveMouse(TargetX, TargetY, Time, [&bWaitForExecute]()
+			MouseTicker->MoveMouse(TargetX, TargetY, Time, [Done]()
 			{
-				bWaitForExecute = false;
+				Done.Execute();
 			});
 		});
-
-		while (bWaitForExecute)
-		{
-			FPlatformProcess::Sleep(.1f);
-		}
 	}
 
 	static void SlateMousePressed(FKey MouseKey)
