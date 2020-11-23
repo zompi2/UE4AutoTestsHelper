@@ -117,6 +117,8 @@ public:
 
 	static void RunOnGameThreadAndWait(TUniqueFunction<void()> Function)
 	{
+		checkf(IsInGameThread() == false, TEXT("You are not supposed to run this on Game Thread. Use only in LatentIt."));
+
 		bool bWaitForExecute = true;
 		AsyncTask(ENamedThreads::GameThread, [&bWaitForExecute, &Function]()
 		{
@@ -131,6 +133,8 @@ public:
 
 	static void RunOnGameThreadLatentAndWait(TUniqueFunction<void(const FDoneDelegate TestDone)> Function)
 	{
+		checkf(IsInGameThread() == false, TEXT("You are not supposed to run this on Game Thread. Use only in LatentIt."));
+
 		bool bWaitForExecute = true;
 		AsyncTask(ENamedThreads::GameThread, [&bWaitForExecute, &Function]()
 		{
