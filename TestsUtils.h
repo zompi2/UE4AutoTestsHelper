@@ -130,7 +130,7 @@ public:
 		}
 	}
 
-	static void RunOnGameThreadLatentAndWait(TUniqueFunction<void(const FDoneDelegate TestDone)> Function)
+	static void RunOnGameThreadLatentAndWait(TUniqueFunction<void(const FDoneDelegate)> Function)
 	{
 		checkf(IsInGameThread() == false, TEXT("You are not supposed to run this on Game Thread. Use only in LatentIt."));
 
