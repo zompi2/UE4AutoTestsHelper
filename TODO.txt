@@ -1,0 +1,6 @@
+- divide h to h+cpp
+- checkf with gamethread no gamethread everywhere
+- copyrights for files
+- Load/Release object class
+- GetFirstActorOfClass
+- 
