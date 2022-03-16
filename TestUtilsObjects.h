@@ -60,5 +60,26 @@ public:
 		}
 		return nullptr;
 	}
+
+	template<typename T>
+	static UClass* GetClassFromPath(const TCHAR* Path)
+	{
+		UClass* LoadedClass = StaticLoadClass(T::StaticClass(), NULL, Path);
+		if (LoadedClass)
+		{
+			LoadedClass->AddToRoot();
+			return LoadedClass;
+		}
+		return nullptr;
+	}
+
+	static void ReleaseClass(UClass*& Class)
+	{
+		if (Class)
+		{
+			Class->RemoveFromRoot();
+			Class = nullptr;
+		}
+	}
 };
 

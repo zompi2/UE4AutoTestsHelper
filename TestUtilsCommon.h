@@ -4,6 +4,7 @@
 #include "Misc/AutomationTest.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
+#include "TestUtilsFlow.h"
 
 class FTestUtilsCommon
 {
@@ -37,5 +38,13 @@ public:
 		{
 			PC->ConsoleCommand(TEXT("Exit"), true);
 		}
+	}
+
+	static void MakeScreenshot(const FString& FileName)
+	{
+		FTestUtilsFlow::RunOnGameThreadAndWait([FileName]()
+		{
+			FScreenshotRequest::RequestScreenshot(FPaths::AutomationDir() / TEXT("ScreenShots") / FileName, true, false);
+		});
 	}
 };
