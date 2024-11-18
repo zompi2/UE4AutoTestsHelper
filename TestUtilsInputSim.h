@@ -46,6 +46,22 @@ public:
 		});
 	}
 
+	static bool SlateKeyPress(const FKey Key)
+	{
+		const uint32* KeyCode = nullptr;
+		const uint32* CharCode = nullptr;
+		FInputKeyManager::Get().GetCodesFromKey(Key, KeyCode, CharCode);
+		return FSlateApplication::Get().OnKeyDown(KeyCode ? *KeyCode : 0, CharCode ? *CharCode : 0, false);
+	}
+
+	static bool SlateKeyReleased(const FKey Key)
+	{
+		const uint32* KeyCode = nullptr;
+		const uint32* CharCode = nullptr;
+		FInputKeyManager::Get().GetCodesFromKey(Key, KeyCode, CharCode);
+		return FSlateApplication::Get().OnKeyUp(KeyCode ? *KeyCode : 0, CharCode ? *CharCode : 0, false);
+	}
+
 	static bool KeyEvent(FKey Key, EInputEvent InputEvent)
 	{
 		if (GEngine)
